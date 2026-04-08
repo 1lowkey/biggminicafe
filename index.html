@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Bigg Mini Cafe | Artisanal Roasting</title>
+</head>
+
+<body>
+    <nav class="nav" role="navigation">
+        <div class="nav-brand">
+            <h1>Bigg Mini Cafe</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="hero">
+        <div class="slider-wrapper">
+            <div class="slider">
+                <div class="slide-item">
+                    <img src="images/herbal-tea.webp" alt="Herbal tea in a cup">
+                    <div class="slide-text">
+                        <p class="eyebrow">ESTABLISHED 2024</p>
+                        <h2>THE VELVET LAVENDER</h2>
+                        <p>A sensorial journey through hand-picked blossoms and our signature espresso concentrate, crafted for the discerning palate.</p>
+                        <a class="btn btn-primary" href="#menu">Explore Selection <span class="arrow">→</span></a>
+                    </div>
+                </div>
+                <div class="slide-item">
+                    <img src="images/slider2.jpg" alt="Specialty beverage">
+                    <div class="slide-text">
+                        <p class="eyebrow">OUR STORY</p>
+                        <h2>MASTERFULLY ROASTED</h2>
+                        <p>Experience the tactile richness of our ethically sourced beans, hand-roasted in small batches for a depth of flavor that lingers.</p>
+                        <a class="btn btn-primary" href="#menu">Explore the Craft <span class="arrow">→</span></a>
+                    </div>
+                </div>
+                <div class="slide-item">
+                    <img src="images/slider3.avif" alt="Coffee special">
+                    <div class="slide-text">
+                        <p class="eyebrow">PREMIUM SELECTION</p>
+                        <h2>ARTISANAL BREWS</h2>
+                        <p>Every cup is a conversation between the bean and the barista, meticulously brewed to perfection using traditional methods.</p>
+                        <a class="btn btn-primary" href="#menu">View the Menu <span class="arrow">→</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slider-controls">
+                <div class="slider-dots">
+                    <span class="slider-dot slider-dot--active"></span>
+                    <span class="slider-dot"></span>
+                    <span class="slider-dot"></span>
+                </div>
+                <div class="slider-arrows">
+                    <button class="slider-arrow slider-arrow--left" aria-label="Previous slide">‹</button>
+                    <button class="slider-arrow slider-arrow--right" aria-label="Next slide">›</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="intro-section">
+            <div class="intro-copy">
+                <span class="eyebrow">OUR PHILOSOPHY</span>
+                <h2>Every cup made to feel like a moment.</h2>
+                <p>At Bigg Mini Cafe, we believe coffee is more than caffeine. It's a moment of pause in a restless world. We source only from small-hold farmers who share our commitment to excellence.</p>
+            </div>
+        </section>
+
+        <section class="products" id="menu">
+            <div class="section-header">
+                <span class="eyebrow">SELECTED ROASTS</span>
+                <h2>Handpicked favorites for every taste.</h2>
+            </div>
+
+            <div id="productsContainer">
+                <article class="product">
+                    <div class="product-img-wrapper">
+                        <img src="images/coffee.png" alt="Coffee image">
+                        <span class="badge">SINGLE ORIGIN</span>
+                    </div>
+                    <h3>Ethiopian Yirgacheffe</h3>
+                    <p>Notes of jasmine, lemon, and bergamot with a tea-like finish.</p>
+                    <div class="product-footer">
+                        <span class="explore-link">Discover Details <span class="arrow">→</span></span>
+                    </div>
+                </article>
+                <article class="product">
+                    <div class="product-img-wrapper">
+                        <img src="images/oolong-tea.jpg" alt="Oolong tea image">
+                    </div>
+                    <h3>Spring Oolong</h3>
+                    <p>A graceful tea with floral notes and rich aroma for a calm afternoon.</p>
+                    <div class="product-footer">
+                        <span class="explore-link">Discover Details <span class="arrow">→</span></span>
+                    </div>
+                </article>
+                <article class="product">
+                    <div class="product-img-wrapper">
+                        <img src="images/green-tea.webp" alt="Green tea image">
+                    </div>
+                    <h3>Ceremonial Matcha</h3>
+                    <p>Vibrant, stone-ground green tea with a smooth, umami-rich profile.</p>
+                    <div class="product-footer">
+                        <span class="explore-link">Discover Details <span class="arrow">→</span></span>
+                    </div>
+                </article>
+                <article class="product">
+                    <div class="product-img-wrapper">
+                        <img src="images/herbal-tea.webp" alt="Herbal tea image">
+                    </div>
+                    <h3>Forest Herbal Blend</h3>
+                    <p>Lavender, chamomile, and mint combine for a calm, late-evening moment.</p>
+                    <div class="product-footer">
+                        <span class="explore-link">Discover Details <span class="arrow">→</span></span>
+                    </div>
+                </article>
+                <article class="product">
+                    <div class="product-img-wrapper">
+                        <img src="images/black-tea.jpg" alt="Black tea image">
+                    </div>
+                    <h3>Aged Black Tea</h3>
+                    <p>Robust, malty notes with a hint of dark chocolate for a rich experience.</p>
+                    <div class="product-footer">
+                        <span class="explore-link">Discover Details <span class="arrow">→</span></span>
+                    </div>
+                </article>
+                <article class="product">
+                    <div class="product-img-wrapper">
+                        <img src="images/coffee.png" alt="Espresso image">
+                        <span class="badge">HOUSE BLEND</span>
+                    </div>
+                    <h3>Artisanal Espresso</h3>
+                    <p>A double-shot of our signature bean, offering a thick crema and bold intensity.</p>
+                    <div class="product-footer">
+                        <span class="explore-link">Discover Details <span class="arrow">→</span></span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="contact-form-section" id="contact">
+            <div class="form-card">
+                <div class="form-content">
+                    <div class="form-text">
+                        <span class="eyebrow">JOIN THE COLLECTIVE</span>
+                        <h2>We love hearing from our community.</h2>
+                        <p>Receive roasting notes, early access to new harvests, and invitations to our cupping sessions.</p>
+                    </div>
+
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <input id="email" type="email" name="email" placeholder="Your email address" required>
+                            <button type="submit" class="btn-submit">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <p class="footer-logo">Bigg Mini Cafe</p>
+                <p class="footer-tagline">Cultivating artisanal excellence through the art of the perfect roast.</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Explore</h4>
+                    <a href="#">Sustainability</a>
+                    <a href="#">Wholesale</a>
+                    <a href="#">Careers</a>
+                </div>
+                <div class="link-group">
+                    <h4>Social</h4>
+                    <a href="#">Instagram</a>
+                    <a href="#">Privacy</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Bigg Mini Cafe. Ethically Sourced.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
+html>
