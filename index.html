@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
     <title>Bigg Mini Cafe | Artisanal Roasting</title>
 </head>
 
@@ -16,7 +17,13 @@
         <div class="nav-brand">
             <h1>Bigg Mini Cafe</h1>
         </div>
-        <ul class="nav-links">
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div id="authLink"></div>
+        <ul class="nav-links" id="navLinks">
             <li><a href="#home">Home</a></li>
             <li><a href="#menu">Menu</a></li>
             <li><a href="#contact">Contact</a></li>
@@ -85,150 +92,135 @@
             </div>
 
             <div id="productsContainer">
-                <article class="product">
+                <article class="product" data-product="yirgacheffe">
                     <div class="product-img-wrapper">
-                        <img src="images/coffee.png" alt="Coffee image">
-                        <span class="badge">SINGLE ORIGIN</span>
+                        <img src="images/coffee.png" alt="Ethiopian Yirgacheffe whole bean coffee">
+                        <span class="badge">SPECIALTY SINGLE ORIGIN</span>
                     </div>
-                    <h3>Ethiopian Yirgacheffe</h3>
-                    <p>Notes of jasmine, lemon, and bergamot with a tea-like finish.</p>
+                    <p class="product-category">Whole Bean Coffee</p>
+                    <h3>Ethiopian Yirgacheffe - Whole Bean Coffee</h3>
+                    <p class="product-subtext">Bright and aromatic cup with floral depth and citrus lift.</p>
+
                     <div class="product-footer">
-                        <details class="product-details">
-                            <summary class="explore-link">Discover Details <span class="arrow">→</span></summary>
-                            <dl>
-                                <dt>Origin</dt>
-                                <dd>Ethiopia</dd>
-                                <dt>Flavor</dt>
-                                <dd>Floral, citrus</dd>
-                                <dt>Roast</dt>
-                                <dd>Light</dd>
-                                <dt>Brew</dt>
-                                <dd>Pour-over or espresso</dd>
-                                <dt>Price</dt>
-                                <dd>$16 / 250g</dd>
-                            </dl>
-                        </details>
+                        <div class="product-pricing-row">
+                            <p class="product-price">GHS 18.00</p>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-heart" type="button" aria-label="Save Ethiopian Yirgacheffe">♡</button>
+                            <button class="btn-buy" type="button">Add to Cart</button>
+                            <a class="btn-info" href="details.html">More Info</a>
+                        </div>
+                        <p class="product-rating">4.9 / 5 rating from 128 reviews</p>
                     </div>
                 </article>
-                <article class="product">
+
+                <article class="product" data-product="oolong">
                     <div class="product-img-wrapper">
-                        <img src="images/oolong-tea.jpg" alt="Oolong tea image">
+                        <img src="images/oolong-tea.jpg" alt="Spring Oolong loose leaf tea">
+                        <span class="badge">HERBAL INFUSION</span>
                     </div>
-                    <h3>Spring Oolong</h3>
-                    <p>A graceful tea with floral notes and rich aroma for a calm afternoon.</p>
+                    <p class="product-category">Loose Leaf Tea</p>
+                    <h3>Spring Oolong - Loose Leaf Tea</h3>
+                    <p class="product-subtext">Elegant floral body with silky sweetness and long finish.</p>
+
                     <div class="product-footer">
-                        <details class="product-details">
-                            <summary class="explore-link">Discover Details <span class="arrow">→</span></summary>
-                            <dl>
-                                <dt>Origin</dt>
-                                <dd>China</dd>
-                                <dt>Flavor</dt>
-                                <dd>Floral, honey</dd>
-                                <dt>Roast</dt>
-                                <dd>Light</dd>
-                                <dt>Brew</dt>
-                                <dd>3g / 150ml, multiple short steeps</dd>
-                                <dt>Price</dt>
-                                <dd>$14 / 100g</dd>
-                            </dl>
-                        </details>
+                        <div class="product-pricing-row">
+                            <p class="product-price">GHS 16.00</p>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-heart" type="button" aria-label="Save Spring Oolong">♡</button>
+                            <button class="btn-buy" type="button">Add to Cart</button>
+                            <a class="btn-info" href="details.html">More Info</a>
+                        </div>
+                        <p class="product-rating">4.8 / 5 rating from 92 reviews</p>
                     </div>
                 </article>
-                <article class="product">
+
+                <article class="product" data-product="matcha">
                     <div class="product-img-wrapper">
-                        <img src="images/green-tea.webp" alt="Green tea image">
+                        <img src="images/green-tea.webp" alt="Ceremonial matcha green tea">
+                        <span class="badge">CEREMONIAL GRADE</span>
                     </div>
-                    <h3>Ceremonial Matcha</h3>
-                    <p>Vibrant, stone-ground green tea with a smooth, umami-rich profile.</p>
+                    <p class="product-category">Stone Ground Green Tea</p>
+                    <h3>Ceremonial Matcha - Premium Green Tea</h3>
+                    <p class="product-subtext">Creamy umami profile designed for clean focus and smooth energy.</p>
+
                     <div class="product-footer">
-                        <details class="product-details">
-                            <summary class="explore-link">Discover Details <span class="arrow">→</span></summary>
-                            <dl>
-                                <dt>Origin</dt>
-                                <dd>Japan</dd>
-                                <dt>Flavor</dt>
-                                <dd>Umami, creamy</dd>
-                                <dt>Roast</dt>
-                                <dd>N/A (ceremonial)</dd>
-                                <dt>Brew</dt>
-                                <dd>Whisk with hot water</dd>
-                                <dt>Price</dt>
-                                <dd>$22 / 30g</dd>
-                            </dl>
-                        </details>
+                        <div class="product-pricing-row">
+                            <p class="product-price">GHS 24.00</p>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-heart" type="button" aria-label="Save Ceremonial Matcha">♡</button>
+                            <button class="btn-buy" type="button">Add to Cart</button>
+                            <a class="btn-info" href="details.html">More Info</a>
+                        </div>
+                        <p class="product-rating">4.9 / 5 rating from 146 reviews</p>
                     </div>
                 </article>
-                <article class="product">
+
+                <article class="product" data-product="herbal">
                     <div class="product-img-wrapper">
-                        <img src="images/herbal-tea.webp" alt="Herbal tea image">
+                        <img src="images/herbal-tea.webp" alt="Forest herbal blend tea">
+                        <span class="badge">CAFFEINE FREE</span>
                     </div>
-                    <h3>Forest Herbal Blend</h3>
-                    <p>Lavender, chamomile, and mint combine for a calm, late-evening moment.</p>
+                    <p class="product-category">Botanical Tea Blend</p>
+                    <h3>Forest Herbal Blend - Evening Tea</h3>
+                    <p class="product-subtext">Soft floral comfort for slower evenings and deep relaxation.</p>
+
                     <div class="product-footer">
-                        <details class="product-details">
-                            <summary class="explore-link">Discover Details <span class="arrow">→</span></summary>
-                            <dl>
-                                <dt>Origin</dt>
-                                <dd>Local blend</dd>
-                                <dt>Flavor</dt>
-                                <dd>Lavender, chamomile, mint</dd>
-                                <dt>Roast</dt>
-                                <dd>Herbal blend</dd>
-                                <dt>Brew</dt>
-                                <dd>2 tsp / 250ml, steep 6–8 min</dd>
-                                <dt>Price</dt>
-                                <dd>$12 / 40g</dd>
-                            </dl>
-                        </details>
+                        <div class="product-pricing-row">
+                            <p class="product-price">GHS 14.00</p>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-heart" type="button" aria-label="Save Forest Herbal Blend">♡</button>
+                            <button class="btn-buy" type="button">Add to Cart</button>
+                            <a class="btn-info" href="details.html">More Info</a>
+                        </div>
+                        <p class="product-rating">4.7 / 5 rating from 68 reviews</p>
                     </div>
                 </article>
-                <article class="product">
+
+                <article class="product" data-product="blacktea">
                     <div class="product-img-wrapper">
-                        <img src="images/black-tea.jpg" alt="Black tea image">
+                        <img src="images/black-tea.jpg" alt="Aged black tea">
+                        <span class="badge">ESTATE RESERVE</span>
                     </div>
-                    <h3>Aged Black Tea</h3>
-                    <p>Robust, malty notes with a hint of dark chocolate for a rich experience.</p>
+                    <p class="product-category">Aged Black Tea</p>
+                    <h3>Aged Black Tea - Estate Reserve</h3>
+                    <p class="product-subtext">Bold malty cup with dark cocoa character and rich finish.</p>
+
                     <div class="product-footer">
-                        <details class="product-details">
-                            <summary class="explore-link">Discover Details <span class="arrow">→</span></summary>
-                            <dl>
-                                <dt>Origin</dt>
-                                <dd>Yunnan, China</dd>
-                                <dt>Flavor</dt>
-                                <dd>Malty, chocolate</dd>
-                                <dt>Roast</dt>
-                                <dd>Aged/fermented</dd>
-                                <dt>Brew</dt>
-                                <dd>95°C, 3–4 minutes</dd>
-                                <dt>Price</dt>
-                                <dd>$15 / 100g</dd>
-                            </dl>
-                        </details>
+                        <div class="product-pricing-row">
+                            <p class="product-price">GHS 17.00</p>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-heart" type="button" aria-label="Save Aged Black Tea">♡</button>
+                            <button class="btn-buy" type="button">Add to Cart</button>
+                            <a class="btn-info" href="details.html">More Info</a>
+                        </div>
+                        <p class="product-rating">4.8 / 5 rating from 101 reviews</p>
                     </div>
                 </article>
-                <article class="product">
+
+                <article class="product" data-product="espresso">
                     <div class="product-img-wrapper">
-                        <img src="images/coffee.png" alt="Espresso image">
+                        <img src="images/coffee.png" alt="Artisanal espresso blend whole bean coffee">
                         <span class="badge">HOUSE BLEND</span>
                     </div>
-                    <h3>Artisanal Espresso</h3>
-                    <p>A double-shot of our signature bean, offering a thick crema and bold intensity.</p>
+                    <p class="product-category">Espresso Whole Bean</p>
+                    <h3>Artisanal Espresso - House Roast</h3>
+                    <p class="product-subtext">Dense crema, caramel body, and a clean cocoa finish.</p>
+
                     <div class="product-footer">
-                        <details class="product-details">
-                            <summary class="explore-link">Discover Details <span class="arrow">→</span></summary>
-                            <dl>
-                                <dt>Origin</dt>
-                                <dd>House blend (Brazil & Colombia)</dd>
-                                <dt>Flavor</dt>
-                                <dd>Caramel, cocoa</dd>
-                                <dt>Roast</dt>
-                                <dd>Medium-dark</dd>
-                                <dt>Brew</dt>
-                                <dd>Espresso: 18–20g dose</dd>
-                                <dt>Price</dt>
-                                <dd>$4 single • $16 / 250g</dd>
-                            </dl>
-                        </details>
+                        <div class="product-pricing-row">
+                            <p class="product-price">GHS 18.00</p>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-heart" type="button" aria-label="Save Artisanal Espresso">♡</button>
+                            <button class="btn-buy" type="button">Add to Cart</button>
+                            <a class="btn-info" href="details.html">More Info</a>
+                        </div>
+                        <p class="product-rating">4.9 / 5 rating from 174 reviews</p>
                     </div>
                 </article>
             </div>
@@ -301,8 +293,32 @@
             <p>© 2026 Bigg Mini Cafe. Ethically Sourced.</p>
         </div>
     </footer>
-    <!-- details/summary used for product details; no JS required -->
+
+    <script>
+        // Hamburger menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            const authLink = document.getElementById('authLink');
+            
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                authLink.classList.toggle('active');
+            });
+            
+            // Close menu when a link is clicked
+            const links = navLinks.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', function() {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    authLink.classList.remove('active');
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>
-html>

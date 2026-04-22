@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="details.css">
+    <script src="auth.js"></script>
+    <title>Bigg Mini Cafe | Product Details</title>
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="index.html">Bigg Mini Cafe</a>
+        <nav class="topnav">
+            <a href="index.html#menu">Shop</a>
+            <a href="#brewGuide">Brew Guides</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main class="details-page">
+        <section class="product-hero">
+            <div class="hero-image-wrap">
+                <img id="heroImage" src="images/coffee.png" alt="Product image">
+                <p class="hero-badge" id="heroBadge">SPECIALTY SINGLE ORIGIN</p>
+            </div>
+
+            <div class="hero-copy">
+                <p class="rating" id="ratingText">4.9 / 5 stars (124 Reviews)</p>
+                <h1 id="productTitle">Ethiopian Yirgacheffe - Easy Start Coffee</h1>
+                <p class="variant" id="productVariant">Starter Bag for New Coffee Drinkers</p>
+
+                <div class="price-row">
+                    <p class="price" id="productPrice">GHS 26.00</p>
+                </div>
+
+                <div class="action-row">
+                    <button type="button" class="cta">Add to Cart</button>
+                    <button type="button" class="icon-btn" aria-label="Save product">♡</button>
+                    <button type="button" class="icon-btn" aria-label="Quick view">◉</button>
+                </div>
+
+                <p class="beginner-tip">New to coffee? Start with milk and a little sugar, then adjust each cup to your taste.</p>
+
+                <div class="glance-grid">
+                    <article>
+                        <h3>What It Tastes Like</h3>
+                        <p id="tasteNotes">Light citrus, soft floral notes, and a smooth finish</p>
+                    </article>
+                    <article>
+                        <h3>How Strong It Feels</h3>
+                        <p id="roastLevel">Light to Medium (not bitter)</p>
+                    </article>
+                    <article>
+                        <h3>Where It Comes From</h3>
+                        <p id="originText">Yirgacheffe, Ethiopia</p>
+                    </article>
+                    <article>
+                        <h3>Pack Size</h3>
+                        <p id="weightText">250g (about 25 to 30 cups)</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="deep-dive">
+            <aside class="deep-left">
+                <h2>Simple Guide</h2>
+                <p id="heritageText">This coffee is a great beginner choice because it is smooth, aromatic, and easy to drink without harsh bitterness.</p>
+
+                <ul class="trust-list">
+                    <li id="allergenInfo">No major allergens in the coffee itself</li>
+                    <li id="badgeA">Organic farming practices</li>
+                    <li id="badgeB">Fair pay and sourcing from farmers</li>
+                </ul>
+            </aside>
+
+            <div class="deep-right">
+                <div class="info-grid" id="brewGuide">
+                    <article class="info-card">
+                        <h3>Brewing Guide (Easy)</h3>
+                        <p><span>Method</span><strong id="brewMethod">French Press or Drip Machine</strong></p>
+                        <p><span>Water Heat</span><strong id="brewTemp">Hot, not boiling (about 92C)</strong></p>
+                        <p><span>Wait Time</span><strong id="brewTime">4 minutes before pouring</strong></p>
+                    </article>
+
+                    <article class="info-card">
+                        <h3>Quality Details</h3>
+                        <p><span>Bean Process</span><strong id="processType">Washed (clean, bright taste)</strong></p>
+                        <p><span>Farm Height</span><strong id="processAltitude">High mountain farms (1800m)</strong></p>
+                        <p><span>Roast Date</span><strong id="roastDate">Apr 18, 2026 (fresh roast)</strong></p>
+                    </article>
+                </div>
+
+                <article class="story-banner">
+                    <h3>The Story</h3>
+                    <p id="storyText">We chose this coffee as a friendly starting point. It is flavorful but gentle, so even first-time coffee drinkers can enjoy it easily.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="details-footer">
+        <p class="footer-brand">Bigg Mini Cafe</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Shipping and Returns</a>
+            <a href="#">Wholesale</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+        <p class="footer-copy">© 2026 Bigg Mini Cafe. Sustainably sourced.</p>
+    </footer>
+
+</body>
+
+</html>
