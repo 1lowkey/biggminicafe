@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Sign In - Bigg Mini Cafe</title>
 </head>
 <body>
     <div class="login-container">
         <h1>Welcome Back</h1>
         <p>Sign in to continue to Bigg Mini Cafe</p>
 
-        <form class="loginForm" id="loginForm">
+        <form class="loginForm" id="loginForm" novalidate>
             <label for="signinEmail">Email</label>
             <input id="signinEmail" type="email" placeholder="you@example.com" required>
 
             <label for="signinPassword">Password</label>
             <input id="signinPassword" type="password" placeholder="Enter password" required>
 
-            <button type="submit">Sign In</button>
+            <button type="submit" id="signinBtn">Sign In</button>
+            
+            <div class="message" id="messageBox"></div>
         </form>
 
         <div class="links">
@@ -25,6 +27,60 @@
             <p>Don't have an account? <a href="SignUp.html">Sign up</a></p>
         </div>
     </div>
+
+    <script type="module">
+        import { signInUser } from './auth.js';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const messageBox = document.getElementById('messageBox');
+            const signinBtn = document.getElementById('signinBtn');
+            
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('signinEmail').value.trim();
+                const password = document.getElementById('signinPassword').value.trim();
+                
+                // Validate inputs
+                if (!email || !password) {
+                    showMessage('Please enter both email and password', 'error');
+                    return;
+                }
+                
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showMessage('Please enter a valid email address', 'error');
+                    return;
+                }
+                
+                // Disable button and show loading state
+                signinBtn.disabled = true;
+                signinBtn.innerHTML = '<span class="loading"></span> Signing in...';
+                
+                // Sign in with Firebase
+                const result = await signInUser(email, password);
+                
+                if (result.success) {
+                    showMessage('Signed in successfully! Redirecting...', 'success');
+                    // Redirect to homepage after 1.5 seconds
+                    setTimeout(function() {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showMessage('Error: ' + result.error, 'error');
+                    signinBtn.disabled = false;
+                    signinBtn.textContent = 'Sign In';
+                }
+            });
+            
+            function showMessage(message, type) {
+                messageBox.textContent = message;
+                messageBox.className = `message show ${type}-message`;
+            }
+        });
+    </script>
 
     <style>
         *, *::before, *::after {
@@ -84,6 +140,7 @@
             padding: 0.8rem 0.9rem;
             font-size: 0.95rem;
             outline: none;
+            transition: all 0.3s ease;
         }
 
         .loginForm input:focus {
@@ -103,17 +160,24 @@
             background: #f4f4f4;
             color: #202020;
             cursor: pointer;
-            width: fit-content;
+            width: 100%;
+            transition: all 0.3s ease;
         }
 
         .loginForm button:hover {
             background: #e9e9e9;
         }
 
+        .loginForm button:disabled {
+            background: #d4d4d4;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
         .links {
             margin-top: 1rem;
             color: #2f2f2f;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .links p {
@@ -129,89 +193,44 @@
             text-decoration: underline;
         }
 
-        .forgot-link {
-            color: #666;
+        .message {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
             font-size: 0.9rem;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
         }
 
         .error-message {
-            color: #d32f2f;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
         }
 
         .success-message {
-            color: #388e3c;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #2f2f2f;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('signinEmail').value;
-                const password = document.getElementById('signinPassword').value;
-                
-                // Validate inputs
-                if (!email || !password) {
-                    showError('Please fill in all fields');
-                    return;
-                }
-                
-                // Get user from registered users
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                const user = users.find(u => u.email === email && u.password === password);
-                
-                if (!user) {
-                    showError('Invalid email or password');
-                    return;
-                }
-                
-                // Store user info in localStorage (you'll replace this with MySQL auth later)
-                const userData = {
-                    email: email,
-                    fullName: user.name || 'User',
-                    loginTime: new Date().toISOString()
-                };
-                
-                // Save to localStorage
-                localStorage.setItem('currentUser', JSON.stringify(userData));
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                // Show success message
-                showSuccess('Login successful! Redirecting...');
-                
-                // Redirect to homepage after 1.5 seconds
-                setTimeout(function() {
-                    window.location.href = 'index.html';
-                }, 1500);
-            });
-            
-            function showError(message) {
-                let errorDiv = document.querySelector('.error-message');
-                if (!errorDiv) {
-                    errorDiv = document.createElement('div');
-                    errorDiv.className = 'error-message';
-                    loginForm.appendChild(errorDiv);
-                }
-                errorDiv.textContent = message;
-            }
-            
-            function showSuccess(message) {
-                let successDiv = document.querySelector('.success-message');
-                if (!successDiv) {
-                    successDiv = document.createElement('div');
-                    successDiv.className = 'success-message';
-                    loginForm.appendChild(successDiv);
-                }
-                successDiv.textContent = message;
-            }
-        });
-    </script>
 </body>
 </html>

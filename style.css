@@ -115,9 +115,34 @@ h1, h2, h3, .footer-logo {
 #authLink {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    flex: 1;
+    gap: 0.75rem;
+    flex: 0 0 auto;
     justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.cart-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.cart-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: var(--color-secondary);
+    color: var(--color-white);
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
 }
 
 /* Hamburger Menu */
@@ -193,6 +218,8 @@ h1, h2, h3, .footer-logo {
 
 /* User Profile Display */
 .welcome-text {
+    display: inline-flex;
+    align-items: center;
     font-weight: 500;
     font-size: 0.9rem;
     color: var(--color-text);
@@ -200,6 +227,8 @@ h1, h2, h3, .footer-logo {
 }
 
 .logout-btn {
+    display: inline-flex;
+    align-items: center;
     background: var(--color-primary);
     color: var(--color-white);
     border: none;
@@ -764,6 +793,14 @@ footer {
     }
     #authLink {
         gap: 1rem;
+        position: static;
+        left: auto;
+        transform: none;
+    }
+    .cart-badge {
+        min-width: 1.15rem;
+        height: 1.15rem;
+        font-size: 0.68rem;
     }
     .nav-links a { font-size: 0.85rem; }
     .slide-item { padding: 0 5%; }
@@ -825,27 +862,24 @@ footer {
     }
     
     #authLink {
-        position: fixed;
-        top: 150px;
-        right: 0;
-        left: 0;
-        background: rgba(253, 250, 245, 0.98);
-        backdrop-filter: blur(12px);
+        position: static;
+        background: transparent;
+        backdrop-filter: none;
         flex-direction: column;
         gap: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
+        max-height: none;
+        overflow: visible;
+        transition: none;
         padding: 0;
         margin: 0;
         width: 100%;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-        z-index: 98;
+        border-bottom: none;
+        z-index: auto;
     }
     
     #authLink.active {
-        max-height: 130px;
-        padding: 0.5rem 0;
+        max-height: none;
+        padding: 0;
     }
     
     .welcome-text {
@@ -866,6 +900,17 @@ footer {
         display: block;
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
+    }
+
+    .cart-link {
+        display: flex;
+        justify-content: center;
+    }
+
+    .cart-badge {
+        min-width: 1.1rem;
+        height: 1.1rem;
+        font-size: 0.65rem;
     }
     
     .signup-link {
@@ -911,7 +956,7 @@ footer {
     }
     #authLink {
         gap: 0.4rem;
-        margin: 0.2rem 0;
+        margin: 0;
     }
     .welcome-text {
         font-size: 0.6rem;
@@ -919,6 +964,16 @@ footer {
     .logout-btn, .signin-link, .signup-link {
         font-size: 0.6rem;
         padding: 0.25rem 0.5rem;
+    }
+
+    .cart-link {
+        gap: 0.3rem;
+    }
+
+    .cart-badge {
+        min-width: 1rem;
+        height: 1rem;
+        font-size: 0.6rem;
     }
 }
 
