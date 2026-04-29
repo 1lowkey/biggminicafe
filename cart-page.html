@@ -337,6 +337,24 @@
 
     <script src="cart.js"></script>
     <script>
+        let currentUser = null;
+        let authReadyPromise = null;
+
+        function waitForAuthReady() {
+            if (!authReadyPromise) {
+                authReadyPromise = import('./auth.js').then((authModule) => {
+                    return new Promise((resolve) => {
+                        authModule.onAuthStateChanged(authModule.auth, (user) => {
+                            currentUser = user;
+                            resolve(user);
+                        });
+                    });
+                });
+            }
+
+            return authReadyPromise;
+        }
+
         /**
          * Display cart items on the page
          */
@@ -430,18 +448,42 @@
         /**
          * Handle checkout
          */
-        document.getElementById('checkoutBtn').addEventListener('click', function() {
+        document.getElementById('checkoutBtn').addEventListener('click', async function() {
+            if (!currentUser) {
+                await waitForAuthReady();
+            }
+
+            if (!currentUser) {
+                showMessage('You must be signed in to place an order.', 'error');
+                return;
+            }
+
             const cart = getCart();
             if (cart.length === 0) {
                 showMessage('Your cart is empty', 'error');
                 return;
             }
-            
-            // For now, show a success message and clear the cart
-            // In production, this would redirect to a payment page
+
             const totals = getCartTotals();
-            showMessage(`Order placed! Total: GHS ${totals.total.toFixed(2)}. Thank you for your purchase!`, 'success');
-            
+
+            try {
+                const authModule = await import('./auth.js');
+                const result = await authModule.saveOrder({
+                    items: cart,
+                    totals: totals
+                });
+
+                if (!result.success) {
+                    showMessage(result.error || 'Could not save order.', 'error');
+                    return;
+                }
+
+                showMessage(`Order placed! Order ID: ${result.orderId}. Total: GHS ${totals.total.toFixed(2)}.`, 'success');
+            } catch (error) {
+                showMessage(`Could not save order: ${error.message}`, 'error');
+                return;
+            }
+
             setTimeout(() => {
                 clearCart();
                 displayCart();
@@ -466,6 +508,7 @@
          * Initialize cart display on page load
          */
         document.addEventListener('DOMContentLoaded', function() {
+            waitForAuthReady();
             displayCart();
         });
     </script>
