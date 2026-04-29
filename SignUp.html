@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Sign Up - Bigg Mini Cafe</title>
 </head>
 <body>
     <div class="signup-container">
         <h1>Create Account</h1>
         <p>Sign up to start your Bigg Mini Cafe experience</p>
 
-        <form class="signupForm" id="signupForm">
-            <label for="signupName">Name</label>
+        <form class="signupForm" id="signupForm" novalidate>
+            <label for="signupName">Full Name</label>
             <input id="signupName" type="text" placeholder="Your full name" required>
 
             <label for="signupAddress">Address</label>
@@ -24,9 +24,14 @@
             <input id="signupEmail" type="email" placeholder="you@example.com" required>
 
             <label for="signupPassword">Password</label>
-            <input id="signupPassword" type="password" placeholder="Create password" required>
+            <input id="signupPassword" type="password" placeholder="Create password (min. 6 characters)" required>
 
-            <button type="submit">Sign Up</button>
+            <label for="signupPasswordConfirm">Confirm Password</label>
+            <input id="signupPasswordConfirm" type="password" placeholder="Confirm password" required>
+
+            <button type="submit" id="signupBtn">Sign Up</button>
+            
+            <div class="message" id="messageBox"></div>
         </form>
 
         <div class="back">
@@ -34,111 +39,85 @@
         </div>
     </div>
 
-  
-</body>
-</html>
+    <script type="module">
+        import { signUpUser } from './auth.js';
 
-  <script>
         document.addEventListener('DOMContentLoaded', function() {
             const signupForm = document.getElementById('signupForm');
+            const messageBox = document.getElementById('messageBox');
+            const signupBtn = document.getElementById('signupBtn');
             
-            signupForm.addEventListener('submit', function(e) {
+            signupForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 const name = document.getElementById('signupName').value.trim();
                 const address = document.getElementById('signupAddress').value.trim();
                 const phone = document.getElementById('signupPhone').value.trim();
                 const email = document.getElementById('signupEmail').value.trim();
-                const password = document.getElementById('signupPassword').value;
+                const password = document.getElementById('signupPassword').value.trim();
+                const confirmPassword = document.getElementById('signupPasswordConfirm').value.trim();
                 
                 // Validate inputs
-                if (!name || !address || !phone || !email || !password) {
-                    showError('Please fill in all fields');
+                if (!name || !address || !phone || !email || !password || !confirmPassword) {
+                    showMessage('Please fill in all fields', 'error');
                     return;
                 }
                 
                 // Email validation
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
-                    showError('Please enter a valid email address');
+                    showMessage('Please enter a valid email address', 'error');
                     return;
                 }
                 
                 // Password validation (at least 6 characters)
                 if (password.length < 6) {
-                    showError('Password must be at least 6 characters long');
+                    showMessage('Password must be at least 6 characters long', 'error');
+                    return;
+                }
+
+                // Confirm password match
+                if (password !== confirmPassword) {
+                    showMessage('Passwords do not match', 'error');
                     return;
                 }
                 
                 // Phone validation (at least 10 characters)
                 if (phone.length < 10) {
-                    showError('Please enter a valid phone number');
+                    showMessage('Please enter a valid phone number', 'error');
                     return;
                 }
                 
-                // Create user object
-                const newUser = {
+                // Disable button and show loading state
+                signupBtn.disabled = true;
+                signupBtn.innerHTML = '<span class="loading"></span> Creating account...';
+                
+                // Sign up with Firebase
+                const result = await signUpUser(email, password, {
                     name: name,
                     address: address,
-                    phone: phone,
-                    email: email,
-                    password: password, // NOTE: In production, hash this before sending to database
-                    createdAt: new Date().toISOString()
-                };
+                    phone: phone
+                });
                 
-                // For now, store in localStorage (you'll replace this with MySQL later)
-                const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-                
-                // Check if email already exists
-                if (existingUsers.some(user => user.email === email)) {
-                    showError('This email is already registered');
-                    return;
+                if (result.success) {
+                    showMessage('Account created successfully! Redirecting...', 'success');
+                    // Redirect to homepage after 2 seconds
+                    setTimeout(function() {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    showMessage('Error: ' + result.error, 'error');
+                    signupBtn.disabled = false;
+                    signupBtn.textContent = 'Sign Up';
                 }
-                
-                // Add new user
-                existingUsers.push(newUser);
-                localStorage.setItem('users', JSON.stringify(existingUsers));
-                
-                // Log in the new user
-                const userData = {
-                    email: email,
-                    fullName: name,
-                    loginTime: new Date().toISOString()
-                };
-                localStorage.setItem('currentUser', JSON.stringify(userData));
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                // Show success message
-                showSuccess('Account created successfully! Redirecting...');
-                
-                // Redirect to homepage after 1.5 seconds
-                setTimeout(function() {
-                    window.location.href = 'index.html';
-                }, 1500);
             });
             
-            function showError(message) {
-                let errorDiv = document.querySelector('.error-message');
-                if (!errorDiv) {
-                    errorDiv = document.createElement('div');
-                    errorDiv.className = 'error-message';
-                    signupForm.appendChild(errorDiv);
-                }
-                errorDiv.textContent = message;
-            }
-            
-            function showSuccess(message) {
-                let successDiv = document.querySelector('.success-message');
-                if (!successDiv) {
-                    successDiv = document.createElement('div');
-                    successDiv.className = 'success-message';
-                    signupForm.appendChild(successDiv);
-                }
-                successDiv.textContent = message;
+            function showMessage(message, type) {
+                messageBox.textContent = message;
+                messageBox.className = `message show ${type}-message`;
             }
         });
     </script>
-
 
     <style>
         *, *::before, *::after {
@@ -198,6 +177,7 @@
             padding: 0.8rem 0.9rem;
             font-size: 0.95rem;
             outline: none;
+            transition: all 0.3s ease;
         }
 
         .signupForm input:focus {
@@ -217,11 +197,18 @@
             background: #f4f4f4;
             color: #202020;
             cursor: pointer;
-            width: fit-content;
+            width: 100%;
+            transition: all 0.3s ease;
         }
 
         .signupForm button:hover {
             background: #e9e9e9;
+        }
+
+        .signupForm button:disabled {
+            background: #d4d4d4;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .back {
@@ -239,15 +226,44 @@
             text-decoration: underline;
         }
 
+        .message {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
         .error-message {
-            color: #d32f2f;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
         }
 
         .success-message {
-            color: #388e3c;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #2f2f2f;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
+</body>
+</html>

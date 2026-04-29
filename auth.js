@@ -1,11 +1,47 @@
-// Authentication helper functions for Bigg Mini Cafe
+// ============================================
+// FIREBASE AUTHENTICATION & BACKEND
+// Bigg Mini Cafe - Complete Firebase Setup
+// ============================================
+
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, browserLocalPersistence, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, setPersistence, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyCkyvBoPf2cOOlYYsnATmsL8Y2SOVDwuws",
+    authDomain: "biggminicafe.firebaseapp.com",
+    projectId: "biggminicafe",
+    storageBucket: "biggminicafe.firebasestorage.app",
+    messagingSenderId: "630615113167",
+    appId: "1:630615113167:web:01e9fe5489b5c22c0626ba",
+    measurementId: "G-8LKWEHGTLC"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+function normalizeEmail(email) {
+    return email.trim().toLowerCase();
+}
+
+// ============================================
+// AUTHENTICATION FUNCTIONS
+// ============================================
 
 /**
  * Check if user is logged in
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
 function isLoggedIn() {
-    return localStorage.getItem('isLoggedIn') === 'true';
+    return new Promise((resolve) => {
+        onAuthStateChanged(auth, (user) => {
+            resolve(!!user);
+        });
+    });
 }
 
 /**
@@ -13,36 +49,186 @@ function isLoggedIn() {
  * @returns {Object|null}
  */
 function getCurrentUser() {
-    const user = localStorage.getItem('currentUser');
-    return user ? JSON.parse(user) : null;
+    return auth.currentUser;
 }
 
 /**
- * Log in user
- * @param {Object} userData - User data object with email and username
+ * Sign up a new user with email and password
+ * @param {string} email - User email
+ * @param {string} password - User password
+ * @param {Object} userData - Additional user data (name, address, phone)
+ * @returns {Promise<Object>}
  */
-function loginUser(userData) {
-    localStorage.setItem('currentUser', JSON.stringify(userData));
-    localStorage.setItem('isLoggedIn', 'true');
+async function signUpUser(email, password, userData) {
+    try {
+        await setPersistence(auth, browserLocalPersistence);
+
+        const normalizedEmail = normalizeEmail(email);
+        const userCredential = await createUserWithEmailAndPassword(auth, normalizedEmail, password);
+        const user = userCredential.user;
+
+        // Update user profile
+        await updateProfile(user, {
+            displayName: userData.name
+        });
+
+        // Store additional user data in Firestore
+        await setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            email: normalizedEmail,
+            name: userData.name,
+            address: userData.address,
+            phone: userData.phone,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        });
+
+        return {
+            success: true,
+            user: user,
+            message: "Account created successfully!"
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        };
+    }
 }
 
 /**
- * Log out user
+ * Sign in user with email and password
+ * @param {string} email - User email
+ * @param {string} password - User password
+ * @returns {Promise<Object>}
  */
-function logoutUser() {
-    localStorage.removeItem('currentUser');
-    localStorage.setItem('isLoggedIn', 'false');
+async function signInUser(email, password) {
+    try {
+        await setPersistence(auth, browserLocalPersistence);
+
+        const normalizedEmail = normalizeEmail(email);
+        const userCredential = await signInWithEmailAndPassword(auth, normalizedEmail, password);
+        return {
+            success: true,
+            user: userCredential.user,
+            message: "Signed in successfully!"
+        };
+    } catch (error) {
+        if (error.code === 'auth/invalid-credential') {
+            const normalizedEmail = normalizeEmail(email);
+            const methods = await fetchSignInMethodsForEmail(auth, normalizedEmail).catch(() => []);
+
+            if (methods.length === 0) {
+                return {
+                    success: false,
+                    error: 'No account found for this email. Check the email you used during sign up.'
+                };
+            }
+
+            if (methods.includes('password')) {
+                return {
+                    success: false,
+                    error: 'Email and password do not match. Try again or reset the password.'
+                };
+            }
+
+            return {
+                success: false,
+                error: 'This email uses a different sign-in method. Use the same method you used when creating the account.'
+            };
+        }
+
+        return {
+            success: false,
+            error: error.message
+        };
+    }
 }
 
 /**
- * Update user profile in localStorage
- * @param {Object} updatedData - Updated user data
+ * Sign out current user
+ * @returns {Promise<Object>}
  */
-function updateUserProfile(updatedData) {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-        const updated = { ...currentUser, ...updatedData };
-        localStorage.setItem('currentUser', JSON.stringify(updated));
+async function signOutUser() {
+    try {
+        await signOut(auth);
+        return {
+            success: true,
+            message: "Signed out successfully!"
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+}
+
+/**
+ * Send password reset email
+ * @param {string} email - User email
+ * @returns {Promise<Object>}
+ */
+async function resetPassword(email) {
+    try {
+        await sendPasswordResetEmail(auth, email);
+        return {
+            success: true,
+            message: "Password reset email sent!"
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+}
+
+/**
+ * Get user profile from Firestore
+ * @param {string} uid - User ID
+ * @returns {Promise<Object>}
+ */
+async function getUserProfile(uid) {
+    try {
+        const userDoc = await getDoc(doc(db, "users", uid));
+        if (userDoc.exists()) {
+            return userDoc.data();
+        }
+        return null;
+    } catch (error) {
+        console.error("Error getting user profile:", error);
+        return null;
+    }
+}
+
+/**
+ * Update user profile
+ * @param {string} uid - User ID
+ * @param {Object} updates - Fields to update
+ * @returns {Promise<Object>}
+ */
+async function updateUserProfile(uid, updates) {
+    try {
+        await updateDoc(doc(db, "users", uid), {
+            ...updates,
+            updatedAt: new Date().toISOString()
+        });
+        
+        // Update auth profile if name is provided
+        if (updates.name && getCurrentUser()) {
+            await updateProfile(getCurrentUser(), { displayName: updates.name });
+        }
+
+        return {
+            success: true,
+            message: "Profile updated successfully!"
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        };
     }
 }
 
@@ -50,35 +236,32 @@ function updateUserProfile(updatedData) {
  * Display user profile in header
  * Adds full name and logout button to navigation
  */
-function displayUserProfile() {
+async function displayUserProfile() {
     const user = getCurrentUser();
     const authLink = document.getElementById('authLink');
     
     if (!authLink) return;
     
-    if (isLoggedIn() && user) {
-        // Get the name - first try fullName, then look it up from registered users
-        let displayName = user.fullName;
+    if (user) {
+        let displayName = user.displayName || 'User';
         
-        // If fullName is missing, try to get it from the users list
-        if (!displayName) {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const registeredUser = users.find(u => u.email === user.email);
-            displayName = registeredUser ? registeredUser.name : 'User';
+        // Try to get full name from Firestore
+        if (user.uid) {
+            const profile = await getUserProfile(user.uid);
+            if (profile && profile.name) {
+                displayName = profile.name;
+            }
         }
         
         // Create welcome message
         authLink.innerHTML = `
             <span class="welcome-text">Welcome, ${displayName}</span>
+            <button class="logout-btn" style="background: none; border: none; color: #c4a37d; cursor: pointer; margin-left: 10px; text-decoration: underline;">Logout</button>
         `;
-        
-        // Add logout button to the end of nav links if not already there
-        const navLinks = document.getElementById('navLinks');
-        if (navLinks && !document.getElementById('logoutNavItem')) {
-            const logoutLi = document.createElement('li');
-            logoutLi.id = 'logoutNavItem';
-            logoutLi.innerHTML = `<button class="logout-btn" onclick="handleLogout()">Logout</button>`;
-            navLinks.appendChild(logoutLi);
+
+        const logoutButton = authLink.querySelector('.logout-btn');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', handleLogout);
         }
     } else {
         // Create login/signup links
@@ -86,38 +269,19 @@ function displayUserProfile() {
             <a href="SignIn.html" class="auth-link signin-link">Sign In</a>
             <a href="SignUp.html" class="auth-link signup-link">Sign Up</a>
         `;
-        // Remove logout button from nav if it exists
-        const logoutNavItem = document.getElementById('logoutNavItem');
-        if (logoutNavItem) logoutNavItem.remove();
     }
 }
 
-function handleLogout() {
-    if (confirm('Are you sure you want to log out?')) {
-        logoutUser();
+/**
+ * Handle logout
+ */
+async function handleLogout() {
+    const result = await signOutUser();
+    if (result.success) {
+        localStorage.removeItem('cart');
         window.location.href = 'index.html';
-    }
-}
-
-/**
- * Require authentication - redirect to login if not logged in
- * @param {string} redirectUrl - URL to redirect to after login
- */
-function requireLogin(redirectUrl = 'index.html') {
-    if (!isLoggedIn()) {
-        localStorage.setItem('redirectAfterLogin', redirectUrl);
-        window.location.href = 'SignIn.html';
-    }
-}
-
-/**
- * Handle redirect after login
- */
-function handlePostLoginRedirect() {
-    const redirectUrl = localStorage.getItem('redirectAfterLogin');
-    if (redirectUrl) {
-        localStorage.removeItem('redirectAfterLogin');
-        window.location.href = redirectUrl;
+    } else {
+        alert('Error logging out: ' + result.error);
     }
 }
 
@@ -125,5 +289,27 @@ function handlePostLoginRedirect() {
  * Initialize authentication display on page load
  */
 document.addEventListener('DOMContentLoaded', function() {
-    displayUserProfile();
+    onAuthStateChanged(auth, (user) => {
+        displayUserProfile();
+    });
 });
+
+// ============================================
+// EXPORTS FOR MODULE USAGE
+// ============================================
+
+export {
+    signUpUser,
+    signInUser,
+    signOutUser,
+    resetPassword,
+    getCurrentUser,
+    getUserProfile,
+    updateUserProfile,
+    displayUserProfile,
+    handleLogout,
+    isLoggedIn,
+    onAuthStateChanged,
+    auth,
+    db
+};
