@@ -1,14 +1,9 @@
 // ============================================
 // FIRESTORE SECURITY RULES
-// Bigg Mini Cafe - Updated Rules
+// Bigg Mini Cafe - User and Order Access
 // ============================================
-// 
-// INSTRUCTIONS:
-// 1. Go to Firebase Console > Your Project
-// 2. Click "Firestore Database" > "Rules" tab
-// 3. Delete the current rules
-// 4. Copy ALL the code below and paste it
-// 5. Click "Publish"
+//
+// Paste these rules into Firebase Console > Firestore Database > Rules
 //
 // ============================================
 
@@ -16,30 +11,16 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow authenticated users to read and write their own user document
+    // Allow authenticated users to read/write their own user document
     match /users/{userId} {
-      allow read, write: if request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Allow all authenticated users to read products (public collection)
-    match /products/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if false; // Only admins can write (via backend)
-    }
-
-    // Allow authenticated users to manage their own cart
-    match /carts/{userId} {
-      allow read, write: if request.auth.uid == userId;
-      
-      // Allow reading/writing cart items
-      match /items/{item=**} {
-        allow read, write: if request.auth.uid == userId;
-      }
-    }
-
-    // Allow authenticated users to read/write their own orders
+    // Allow authenticated users to create and manage their own orders
     match /orders/{orderId} {
-      allow read, write: if request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
     }
 
     // Deny everything else

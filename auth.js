@@ -28,6 +28,21 @@ function normalizeEmail(email) {
     return email.trim().toLowerCase();
 }
 
+let authReadyPromise;
+
+function waitForAuthReady() {
+    if (!authReadyPromise) {
+        authReadyPromise = new Promise((resolve) => {
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+                unsubscribe();
+                resolve(user);
+            });
+        });
+    }
+
+    return authReadyPromise;
+}
+
 // ============================================
 // AUTHENTICATION FUNCTIONS
 // ============================================
@@ -286,6 +301,71 @@ async function handleLogout() {
 }
 
 /**
+ * Save a completed order to Firestore
+ * @param {Object} orderData - Order payload
+ * @returns {Promise<Object>}
+ */
+async function saveOrder(orderData) {
+    try {
+        const user = getCurrentUser() || await waitForAuthReady();
+        if (!user) {
+            return {
+                success: false,
+                error: 'You must be signed in to place an order.'
+            };
+        }
+
+        const profile = await getUserProfile(user.uid);
+        const payload = {
+            userId: user.uid,
+            userEmail: user.email,
+            userName: profile?.name || user.displayName || 'User',
+            items: orderData.items,
+            totals: orderData.totals,
+            status: 'pending',
+            paymentStatus: 'unpaid',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        const orderRef = await addDoc(collection(db, 'orders'), payload);
+
+        return {
+            success: true,
+            orderId: orderRef.id,
+            message: 'Order saved successfully.'
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+}
+
+/**
+ * Get all orders for the signed-in user
+ * @returns {Promise<Array>}
+ */
+async function getMyOrders() {
+    try {
+        const user = getCurrentUser();
+        if (!user) return [];
+
+        const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
+        const snapshot = await getDocs(q);
+
+        return snapshot.docs.map((documentSnapshot) => ({
+            id: documentSnapshot.id,
+            ...documentSnapshot.data()
+        }));
+    } catch (error) {
+        console.error('Error getting user orders:', error);
+        return [];
+    }
+}
+
+/**
  * Initialize authentication display on page load
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -308,6 +388,8 @@ export {
     updateUserProfile,
     displayUserProfile,
     handleLogout,
+    saveOrder,
+    getMyOrders,
     isLoggedIn,
     onAuthStateChanged,
     auth,
