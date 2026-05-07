@@ -89,9 +89,9 @@ function saveCart(cart) {
  * @returns {Object} Result with success status
  */
 function addToCart(productId, quantity = 1) {
-    // Check auth state from the rendered profile element on pages with auth UI
-    const welcomeTextElement = document.querySelector('.welcome-text');
-    const isLoggedIn = !!(welcomeTextElement && welcomeTextElement.textContent.trim() !== '');
+    // Check if user is logged in by checking the header for auth status
+    const userNameElement = document.querySelector('.user-name');
+    const isLoggedIn = userNameElement && userNameElement.textContent.trim() !== '';
     
     if (!isLoggedIn) {
         alert('Please sign in to add items to your cart');

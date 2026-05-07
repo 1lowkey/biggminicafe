@@ -226,6 +226,34 @@ For production, you should:
 
 ---
 
+## 📤 GitHub Submission Workflow
+
+I cannot create the GitHub account for you from inside the site, but the project is already in a Git repository. To submit it:
+
+1. Create a repository in GitHub.
+2. Connect this folder with `git remote add origin <your-repo-url>`.
+3. Commit your changes with `git add .` and `git commit -m "Add SEO and analytics guide"`.
+4. Push with `git push -u origin main`.
+
+That covers the project upload part of item 3.
+
+---
+
+## 📈 Analytics Report Location
+
+The website now includes a guide page at `analytics-report.html`.
+
+Use it to get to the real downloadable report:
+
+1. Open Google Analytics.
+2. Select the Bigg Mini Cafe property.
+3. Open `Reports` or `Explore`.
+4. Use `Share` or `Export` to download PDF, CSV, or Excel.
+
+If you want a report generated inside the site later, that needs a backend or the Google Analytics Data API.
+
+---
+
 ## 🚀 Next Steps
 
 ### Immediate:
