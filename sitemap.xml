@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>index.html</loc>
+  </url>
+  <url>
+    <loc>details.html</loc>
+  </url>
+  <url>
+    <loc>cart-page.html</loc>
+  </url>
+  <url>
+    <loc>SignIn.html</loc>
+  </url>
+  <url>
+    <loc>SignUp.html</loc>
+  </url>
+  <url>
+    <loc>ForgotPassword.html</loc>
+  </url>
+  <url>
+    <loc>analytics-report.html</loc>
+  </url>
+</urlset>

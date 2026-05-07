@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create your Bigg Mini Cafe account to place orders and save your customer profile.">
+    <meta name="robots" content="noindex,nofollow">
     <title>Sign Up - Bigg Mini Cafe</title>
 </head>
 <body>
@@ -54,8 +56,8 @@
                 const address = document.getElementById('signupAddress').value.trim();
                 const phone = document.getElementById('signupPhone').value.trim();
                 const email = document.getElementById('signupEmail').value.trim();
-                const password = document.getElementById('signupPassword').value.trim();
-                const confirmPassword = document.getElementById('signupPasswordConfirm').value.trim();
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('signupPasswordConfirm').value;
                 
                 // Validate inputs
                 if (!name || !address || !phone || !email || !password || !confirmPassword) {
