@@ -65,6 +65,31 @@ const PRODUCTS = {
 // CART OPERATIONS
 // ============================================
 
+let authUserPromise = null;
+
+/**
+ * Resolve Firebase auth user once on page load.
+ * Uses auth state instead of reading UI text/classes.
+ * @returns {Promise<Object|null>}
+ */
+function getAuthUser() {
+    if (!authUserPromise) {
+        authUserPromise = import('./auth.js')
+            .then((authModule) => new Promise((resolve) => {
+                const unsubscribe = authModule.onAuthStateChanged(authModule.auth, (user) => {
+                    unsubscribe();
+                    resolve(user || null);
+                });
+            }))
+            .catch((error) => {
+                console.error('Could not read auth state:', error);
+                return null;
+            });
+    }
+
+    return authUserPromise;
+}
+
 /**
  * Initialize cart from localStorage or create empty cart
  * @returns {Array}
@@ -88,12 +113,10 @@ function saveCart(cart) {
  * @param {number} quantity - Quantity (default: 1)
  * @returns {Object} Result with success status
  */
-function addToCart(productId, quantity = 1) {
-    // Check if user is logged in by checking the header for auth status
-    const userNameElement = document.querySelector('.user-name');
-    const isLoggedIn = userNameElement && userNameElement.textContent.trim() !== '';
-    
-    if (!isLoggedIn) {
+async function addToCart(productId, quantity = 1) {
+    const user = await getAuthUser();
+
+    if (!user) {
         alert('Please sign in to add items to your cart');
         window.location.href = 'SignIn.html';
         return {
@@ -269,13 +292,13 @@ function updateCartUI() {
  */
 function initCartListeners() {
     // Add event listeners to all "Add to Cart" buttons
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', async function(e) {
         if (e.target.classList.contains('btn-buy')) {
             const productArticle = e.target.closest('article.product, .product');
             if (productArticle) {
                 const productId = productArticle.getAttribute('data-product');
                 if (productId) {
-                    const result = addToCart(productId);
+                    const result = await addToCart(productId);
                     // Show feedback
                     showNotification(result.message, result.success ? 'success' : 'error');
                 }
